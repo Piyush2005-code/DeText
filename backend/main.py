@@ -2,8 +2,9 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from models import LanguageRequest
 from algo_classes import (
-    ComplementNB, PassiveAggressive,
-    RidgeClassifier, SGDClassifier, LangdetectStyleComplementNB,
+    ComplementNB, PassiveAggressive, RidgeClassifier,
+    SGDClassifier, LangdetectStyleComplementNB,
+    FastText, GlotLID, CLD3, CharCNN
 )
 import time
 
@@ -26,7 +27,11 @@ clf_passive_aggressive = _load(PassiveAggressive)
 clf_ridge_classifier   = _load(RidgeClassifier)
 clf_sgd_classifier     = _load(SGDClassifier)
 clf_langdetect         = _load(LangdetectStyleComplementNB)
-# clf_linear_svc is intentionally omitted — clf_LinearSVC.pkl is corrupt (EOF)
+clf_fasttext           = _load(FastText)
+clf_glotlid            = _load(GlotLID)
+clf_cld3               = _load(CLD3)
+clf_charcnn            = _load(CharCNN)
+# clf_linear_svc omitted — corrupt (EOF); clf_nearest_centroid omitted — weight file missing
 
 app.add_middleware(
     CORSMiddleware,
@@ -47,7 +52,11 @@ ALGO_MAP = {
     "Ridge Classifier":       clf_ridge_classifier,
     "SGD Classifier":         clf_sgd_classifier,
     "Lang Detect":            clf_langdetect,
-    # "Linear SVC" omitted — clf_LinearSVC.pkl is corrupt (EOF during extraction)
+    "FastText":               clf_fasttext,
+    "GlotLID":                clf_glotlid,
+    "CLD3":                   clf_cld3,
+    "CharCNN (High-Cap)":     clf_charcnn,
+    # "Linear SVC" omitted — corrupt; "Nearest Centroid" omitted — weight file missing
 }
 
 

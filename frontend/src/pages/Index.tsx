@@ -16,6 +16,10 @@ const ALGORITHMS = [
   { value: "Ridge Classifier", label: "Ridge Classifier" },
   { value: "SGD Classifier", label: "SGD Classifier" },
   { value: "Lang Detect", label: "Lang Detect (Complement NB)" },
+  { value: "FastText", label: "FastText" },
+  { value: "GlotLID", label: "GlotLID" },
+  { value: "CLD3", label: "CLD3" },
+  { value: "CharCNN (High-Cap)", label: "CharCNN (High-Cap)" },
 ];
 
 const Index = () => {
@@ -42,8 +46,7 @@ const Index = () => {
       const data = await res.json();
       setResult(data["detected language"]);
       if (data["execution_time"] != null) {
-        // backend returns start-end (negative), take abs and convert to ms
-        setLatency(Math.abs(data["execution_time"]) * 1000);
+        setLatency(data["execution_time"] * 1000);
       }
     } catch {
       setError("Could not reach the backend. Is it running?");
