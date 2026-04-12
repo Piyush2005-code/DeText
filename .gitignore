@@ -5,7 +5,3 @@ backend/__pycache__/
 *.pyc
 *.pth
 *.pkl
-dataset/raw/x_train.txt
-dataset/raw/x_test.txt
-dataset/raw/y_train.txt
-dataset/raw/y_test.txt
