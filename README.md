@@ -346,31 +346,28 @@ The backend will also **auto-download any missing weights on first startup** —
 3. Enable GPU accelerator (Tesla T4 × 2).
 4. Run all cells sequentially. Total runtime: ~3–4 hours (dominated by Ridge and CharCNN).
 
-### Backend (Inference API)
+### Running Locally (Backend + Frontend)
+
+We have provided a unified startup script that automatically:
+- Checks for Python & Node.js
+- Installs `frontend/node_modules/` if missing
+- Automatically downloads any missing model weights (~2.9 GB)
+- Starts both the FastAPI backend and React frontend concurrently
 
 ```bash
 # 1. Clone the repo
 git clone https://github.com/Piyush2005-code/Language_Detection_PRML_Group_10
 cd Language_Detection_PRML_Group_10
 
-# 2. Install dependencies
-pip install fastapi uvicorn torch scikit-learn joblib
-
-# 3. (Optional) Pre-download weights — or let the server do it automatically
-python3 download_weights.py
-
-# 4. Start the server
-cd backend
-uvicorn main:app --reload
+# 2. Run the startup script
+./start.sh
 ```
 
-### Frontend (Web UI)
+- **Frontend UI:** `http://localhost:5173`
+- **Backend API:** `http://localhost:8000`
 
-```bash
-cd frontend
-npm install
-npm run dev
-```
+> Press `Ctrl+C` in the terminal to cleanly shut down both services.
+
 
 > **Note:** The Ridge Classifier takes ~56 minutes and CharCNN takes ~21 minutes on dual T4 GPUs. On CPU, these will be significantly longer.
 
