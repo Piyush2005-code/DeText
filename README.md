@@ -283,29 +283,93 @@ All models are exported to `./backend/weights/` for use in an inference API.
 
 ---
 
+## Getting the Weights
+
+Model weights are **not stored in this repository** (total ~2.9 GB). Place all files into `backend/weights/` using one of the two methods below.
+
+---
+
+### Option 1 — Google Drive (Manual, Recommended for Quick Setup)
+
+**Download the entire folder in one click:**
+
+> 🔗 **[Google Drive — DeText Model Weights](https://drive.google.com/drive/folders/1w3rNWTsXgIP3jEsSvMKHlUBQslWpZJ0m?usp=sharing)**
+
+1. Open the link above.
+2. Click **"Download all"** (or select individual files).
+3. Unzip / move all files into `backend/weights/`.
+
+Your directory should look like:
+
+```
+backend/weights/
+├── label_encoder.pkl
+├── vectorizer_char_wb_2_4.pkl
+├── vectorizer_char_wb_1_3_langdetect.pkl
+├── clf_ComplementNB.pkl
+├── clf_LinearSVC.pkl
+├── clf_PassiveAggressive.pkl
+├── clf_RidgeClassifier.pkl
+├── clf_SGDClassifier.pkl
+├── langdetect_style_complement_nb.pkl
+├── fasttext_weights.pth
+├── glotlid_weights.pth
+├── cld3_weights.pth
+└── charcnn_highcap_weights.pth
+```
+
+---
+
+### Option 2 — Automated Script (Hugging Face Hub)
+
+The included `download_weights.py` script fetches all weights directly from:
+> 🤗 **[pyconfaced/ClassicalNLP-LanguageDetectionModels](https://huggingface.co/pyconfaced/ClassicalNLP-LanguageDetectionModels)**
+
+```bash
+# From the repo root — downloads only missing files
+python3 download_weights.py
+
+# Force re-download everything (overwrites existing files)
+python3 download_weights.py --force
+```
+
+The backend will also **auto-download any missing weights on first startup** — no manual step needed if you run `uvicorn` right after cloning.
+
+---
+
 ## How to Run
 
-### On Kaggle (Recommended)
+### On Kaggle (Training / Notebook)
 
 1. Open the notebook on Kaggle.
 2. Add the dataset `mexwell/wili-2018` as a data source.
 3. Enable GPU accelerator (Tesla T4 × 2).
 4. Run all cells sequentially. Total runtime: ~3–4 hours (dominated by Ridge and CharCNN).
 
-### Locally
+### Backend (Inference API)
 
 ```bash
-# 1. Clone / download the notebook
+# 1. Clone the repo
+git clone https://github.com/Piyush2005-code/Language_Detection_PRML_Group_10
+cd Language_Detection_PRML_Group_10
+
 # 2. Install dependencies
-pip install torch scikit-learn matplotlib seaborn pandas numpy tqdm joblib
+pip install fastapi uvicorn torch scikit-learn joblib
 
-# 3. Download dataset from Kaggle
-kaggle datasets download -d mexwell/wili-2018
-unzip wili-2018.zip -d ./data/
+# 3. (Optional) Pre-download weights — or let the server do it automatically
+python3 download_weights.py
 
-# 4. Update DATA_DIR in the notebook to point to ./data/
-# 5. Launch Jupyter
-jupyter notebook prml-project-group-10.ipynb
+# 4. Start the server
+cd backend
+uvicorn main:app --reload
+```
+
+### Frontend (Web UI)
+
+```bash
+cd frontend
+npm install
+npm run dev
 ```
 
 > **Note:** The Ridge Classifier takes ~56 minutes and CharCNN takes ~21 minutes on dual T4 GPUs. On CPU, these will be significantly longer.
